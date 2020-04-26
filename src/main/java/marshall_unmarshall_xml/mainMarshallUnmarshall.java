@@ -9,7 +9,7 @@ public class mainMarshallUnmarshall {
     public static void main(String[] args) throws Exception {
 
         try {
-
+            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
             File file = new File("src/test"+"\\fileMarshallXml.xml");
             JAXBContext jaxbContext = JAXBContext.newInstance(Persons.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
@@ -19,6 +19,28 @@ public class mainMarshallUnmarshall {
 
             jaxbMarshaller.marshal(personsData(), file);
             jaxbMarshaller.marshal(personsData(), System.out);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+            //We had written this file in marshalling example
+            System.out.println("\r\n unmarshalling \r\nPersons");
+            Persons pers = (Persons) jaxbUnmarshaller.unmarshal( new File("src/test/fileMarshallXml.xml") );
+            for(Person per : pers.getPersons()){
+                System.out.println("Person");
+                System.out.println("name: " + per.getName());
+                System.out.println("birthday: " + sf.format(per.getBirthday()));
+                if(!per.getHobbies().isEmpty()) {
+                    for (Hobbies hobbs : per.getHobbies()) {
+                        System.out.println("hobbies");
+                        for (Hobby hob : hobbs.getHobby()) {
+                            System.out.println("hobby");
+                            System.out.println("complexity: " + hob.getComplexity());
+                            System.out.println("hobby_name: " + hob.getHobbyName());
+                        }
+                    }
+                }
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
